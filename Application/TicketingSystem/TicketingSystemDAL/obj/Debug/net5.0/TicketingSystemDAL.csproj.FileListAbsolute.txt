@@ -1,0 +1,13 @@
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\TicketingSystemDAL.deps.json
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\TicketingSystemDAL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\ref\TicketingSystemDAL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\TicketingSystemDAL.pdb
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.Properties.Resources.resources
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.csproj.GenerateResource.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.AssemblyInfoInputs.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.AssemblyInfo.cs
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.csproj.CoreCompileInputs.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\ref\TicketingSystemDAL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.pdb

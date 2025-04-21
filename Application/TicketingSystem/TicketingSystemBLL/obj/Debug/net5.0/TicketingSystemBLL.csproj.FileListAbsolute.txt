@@ -1,0 +1,15 @@
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.csproj.AssemblyReference.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.AssemblyInfoInputs.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.AssemblyInfo.cs
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.csproj.CoreCompileInputs.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\TicketingSystemBLL.deps.json
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\TicketingSystemBLL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\ref\TicketingSystemBLL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\TicketingSystemBLL.pdb
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\TicketingSystemDAL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\bin\Debug\net5.0\TicketingSystemDAL.pdb
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.csproj.CopyComplete
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\ref\TicketingSystemBLL.dll
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemBLL\obj\Debug\net5.0\TicketingSystemBLL.pdb

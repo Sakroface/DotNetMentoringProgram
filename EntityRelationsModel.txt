@@ -1,0 +1,89 @@
+@startuml
+
+entity Event {
+*Id : integer <<generated>>
+*Name : varchar
+*StartDate : datetime
+*EndDate : datetime
+*SetupTime : integer (in minutes)
+*TeardownTime : integer (in minutes)
+*Status : integer <<FK>>
+AdvertisementIds : varchar
+Description : varchar(max)
+
+}
+
+entity EventStatus {
+*Id : integer <<generated, PK>>
+*Name : varchar(50)
+}
+
+entity Venue {
+*Id : integer <<generated, PK>>
+*Name : varchar
+*VenueType : integer <<FK>>
+*NumberOfSeats : integer
+}
+
+entity VenueType {
+*Id : integer <<generated, PK>>
+*Name  : varchar(500)
+*SeatsType : integer <<FK>>
+}
+
+entity SeatsType {
+*Id : integer <<generated, PK>>
+*Name : varchar(500)
+Description : varchar(1000)
+}
+
+entity VenueSection {
+*Id : integer <<generated>>
+*VenueId: integer
+*Name : varchar
+}
+
+entity VenueRow {
+*Id : integer
+*SectionId: integer
+*Name : varchar
+}
+
+entity VenueSeat {
+*Id : integer
+*RowId : integer
+*Number : integer
+}
+
+entity EventSeat {
+*SeatId : integer <<FK>>
+*EventId : integer <<FK>>
+*Status : integer <<FK>>
+}
+
+entity SeatStatus {
+*Id : integer <<generated, PK>>
+*Name : varchar(50)
+}
+
+entity EventVenue {
+*EventId : integer
+*VenueId : integer
+}
+
+
+Event ||--|| EventStatus
+Event ||--o{ EventVenue
+Venue ||--o{ EventVenue
+Venue ||--o{ VenueSection
+Venue ||--|| VenueType
+VenueType ||--|| SeatsType
+VenueSection ||--o{ VenueRow
+VenueRow ||--o{ VenueSeat
+VenueSeat }o--|| SeatsType
+EventSeat ||--|| VenueSeat
+EventSeat ||--|| SeatStatus
+
+
+
+@enduml

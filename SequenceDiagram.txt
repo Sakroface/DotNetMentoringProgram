@@ -1,0 +1,90 @@
+@startuml
+actor "Customer" as customer
+participant "Web/Mobile UI" as ui
+participant "API Gateway" as api
+participant "UserService" as userService
+participant "Event Service" as eventService
+participant "Venue Service" as venueService
+participant "Parking Service" as parkingService
+participant "Pricing Service" as priceService
+participant "Order Service" as orderService
+participant "Payment Service" as paymentService
+participant "Ticket Service" as ticketService
+participant "NotificationService" as notificationService
+database "Database" as db
+
+==Event Selection==
+customer -> ui : Select event
+ui -> api : Get /events/{eventId}
+api -> eventService : GetEventDetails(eventId)
+eventService -> db : Select query from the Event table
+eventService <-- db : Returns event row with the data
+api <-- eventService : Returns event details
+ui <-- api : Event details
+customer <-- ui : DisplayEventDetails
+==Find Lowest Price Seats==
+customer -> ui : Request order seats by price
+ui -> api : GET events/{eventId}/seats?userId={userId}&available=true&sortColumn=price&sortOrder=asc
+api -> venueService : GetAvailableSeats(sortColumn, sortOrder)
+venueService -> db : Selects available seats
+venueService <-- db: Returns all available seats
+venueService -> priceService : GetPrices(userId, seats)
+priceService -> db : Selects current bundles, discounts and promotions
+priceService <-- db : Returns collection with the bundles/discounts/promotions applied to the current user
+priceService -> priceService : Order seats by price (sorting order applied)
+venueService <-- priceService : Returns seats with their prices calculated for the current user
+api <-- venueService : Returns ordered seats with their prices to the api
+ui <-- api : Returns ordered seats to the front end
+customer <-- ui : Displays seats ordered by their price
+==Seat Reservation==
+customer -> ui : Selects specific seat/seats
+ui -> api : POST /event/{eventId}/seats/{seatIds}/reserve
+api -> venueService : PlaceReservation(Dictionary<userId, seatId> seatIds)
+venueService -> db : Checks availability for the seats
+venueService <-- db : Returns reserved seats to the user
+venueService -> db : If seats are available changes seats status to "Reserved"
+api <-- venueService : Returns reservation confirmation
+ui <-- api : Seats reserved
+customer <-- ui : Display reservation confirmation
+==Parking lot Reservation==
+customer -> ui : Selects specific parking lot
+ui -> api : POST /event/{eventId}/parking/{parkingIds}/reserve
+api -> parkingService : PlaceReservation(Dictionary<userId, parkingId> parkingIds)
+parkingService -> db : Checks availability for the parking lots
+parkingService <-- db : Returns reserved parking lots to the user
+parkingService -> db : If parking lots are available changes its status to "Reserved"
+api <-- parkingService : Returns reservation confirmation
+ui <-- api : Parking lots are reserved
+customer <-- ui : Display reservation confirmation
+==Payment Processing==
+customer -> ui : Add payment details
+ui -> api : POST /user/paymentsDetails
+api -> userService : AddPaymentDetails(userId, creditCardInfo)
+userService -> paymentService : CC details validation
+userService <-- paymentService : CC has been validated
+userService -> db : Payment details are added to the user
+userService <-- db : User details update confirmation
+api <-- userService : Payment info added successfully
+ui <-- api : Payment information updated
+customer <-- ui : Payment info added successfully
+customer -> ui : Place an order for the seats and parking lots
+ui -> api : POST event/{eventId}/order/createNewOrder?seats={seatids}&parkingLots={parkingLotIds}
+api -> orderService : CreateOrder(Dictionary<userId, List<seatIds, parkingLotIds>> userReservations)
+orderService -> orderService : Check reservation timeout
+orderService -> orderService : Calculate reservations summary (price)
+orderService -> paymentService : Process payment for order
+alt Payment Successfull
+paymentService -> notificationService : SendNotification(notificationAddress)
+paymentService <-- notificationService : Notification has been processed successfully
+paymentService -> db : Create payment record
+paymentService <-- db : Payment record added
+orderService -> ticketService : CreateTicket(orderDetails)
+ticketService -> notificationService : SendNotification(notificationAddress)
+ticketService <-- notificationService : Send operation success
+ticketService -> db : Save ticket details to db.
+ticketService <-- db : Ticket added 
+orderService <-- ticketService : Return ticket for printout
+api <-- orderService : Return ticket
+ui <-- api : Return ticket pdf
+customer <-- ui : Display confirmation and ticket pdf for printout
+@enduml
