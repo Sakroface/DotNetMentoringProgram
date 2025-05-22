@@ -52,8 +52,10 @@ namespace TicketingSystem
             services.AddAutoMapper(typeof(ModelsMapperProfile), typeof(BLLMapperProfile));
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IVenueService, VenueService>();
-
-
+            services.AddScoped<IEventSeatService, EventSeatService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IUtilityService, UtilityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +91,9 @@ namespace TicketingSystem
             var venueTypes = InitVenueTypes(dbContext);
             var eventSeatStatuses = InitEventSeatStatuses(dbContext);
             var seatStatuses = InitSeatStatuses(dbContext);
+            var orderStatuses = InitOrderStatuses(dbContext);
+            var cartStatuses = InitCartStatuses(dbContext);
+            var paymentStatuses = InitPaymentStatuses(dbContext);
 
             InitializeEvents(dbContext, eventStatuses);
             InitializeVenues(dbContext, venueTypes, seatsTypes);
