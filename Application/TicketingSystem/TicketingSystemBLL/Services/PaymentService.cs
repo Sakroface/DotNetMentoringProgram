@@ -18,11 +18,12 @@ namespace TicketingSystemBLL.Services
         private readonly IOrderService _orderService;
         private readonly IEventSeatService _eventSeatService;
 
-        public PaymentService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IEventSeatService eventSeatService)
+        public PaymentService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IOrderService orderService, IEventSeatService eventSeatService)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _orderService = orderService;
             _eventSeatService = eventSeatService;
         }
 
