@@ -1,5 +1,61 @@
 @startuml
 
+entity User {
+Id: Guid
+FirstName: varchar
+LastName: varchar
+Username: varchar
+Password: varchar
+}
+
+entity Order {
+Id: Guid
+userId: integer <<FK>>
+CartId: Guid <<FK>>
+PaymentId: Guid <<FK>>
+StausId: Guid <<FK>>
+TimeStamp: dateTime
+}
+
+entity OrderStatus {
+Id: int
+Name: varchar(50)
+}
+
+entity Cart {
+Id : GUID
+UserId: integer <<FK>>
+EventId: integer <<FK>>
+PriceId: integer <<FK>>
+Status: integer <<FK>>
+CreatedAt: datetime
+UpdateAt: datetime
+}
+
+entity CartStatus {
+Id : integer
+Name: varchar
+}
+
+entity Price {
+Id: GUID
+eventSeatId: integer <<FK>>
+seatType: integer <<FK>>
+amount: decimal 
+}
+
+entity Payment {
+Id: GUID
+cartId: GUID <<FK>>
+TimeStamp: DateTime
+Status: integer <<FK>>
+}
+
+entity PaymentStatus{
+Id : integer
+Name: varchar
+}
+
 entity Event {
 *Id : integer <<generated>>
 *Name : varchar
@@ -28,7 +84,6 @@ entity Venue {
 entity VenueType {
 *Id : integer <<generated, PK>>
 *Name  : varchar(500)
-*SeatsType : integer <<FK>>
 }
 
 entity SeatsType {
@@ -56,9 +111,11 @@ entity VenueSeat {
 }
 
 entity EventSeat {
+*Id : integer<<PK>>
 *SeatId : integer <<FK>>
 *EventId : integer <<FK>>
 *Status : integer <<FK>>
+PriceId : varchar <<FK>>
 }
 
 entity SeatStatus {
@@ -72,12 +129,23 @@ entity EventVenue {
 }
 
 
+Order }o--|| User
+Order ||--|| OrderStatus
+Order ||--|| Cart
+Cart }o--|| User
+Cart }o--|| CartStatus
+Cart ||--|| Event
+Cart ||--o{ Price
+Cart ||--o{ EventSeat
+Price }o--|| EventSeat
+Price ||--o{ SeatsType
+Payment ||--|| Order
+Payment }o--|| PaymentStatus
 Event ||--|| EventStatus
 Event ||--o{ EventVenue
 Venue ||--o{ EventVenue
 Venue ||--o{ VenueSection
 Venue ||--|| VenueType
-VenueType ||--|| SeatsType
 VenueSection ||--o{ VenueRow
 VenueRow ||--o{ VenueSeat
 VenueSeat }o--|| SeatsType

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
     /// <summary>
     /// Class for the venue type.
     /// </summary>
-    public class SeatsType : BaseEntity
+    public class SeatsType : BaseDictionary
     {
         /// <summary>
         /// Contructor by default for EF.
@@ -16,13 +17,6 @@ namespace TicketingSystemDAL.Entities
             VenueTypes = new HashSet<VenueType>();
             VenueSeats = new HashSet<VenueSeat>();
         }
-
-        /// <summary>
-        /// Name for the venue type.
-        /// </summary>
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
 
         /// <summary>
         /// Description for the seats type.

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TicketingSystemDAL.Entities
+namespace TicketingSystemDAL.Entities.Base
 {
     public class BaseEntity
     {

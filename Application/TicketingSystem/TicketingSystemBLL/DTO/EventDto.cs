@@ -1,51 +1,51 @@
 ﻿using System;
 using TicketingSystemBLL.Enums;
 
-namespace TicketingSystemBLL.Objects
+namespace TicketingSystemBLL.DTO
 {
     /// <summary>
     /// Class for the events objects.
     /// </summary>
-    public class Event
+    public class EventDto
     {
         /// <summary>
         /// Unique identifier.
         /// </summary>
-        int Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Name of the event.
         /// </summary>
-        string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Date and time of the start of the event.
         /// </summary>
-        DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         /// <summary>
         /// Date and time of the end of the event.
         /// </summary>
-        DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         /// Status of the event.
         /// </summary>
-        EventStatus EventStatus { get; set; }
+        public EventStatus EventStatus { get; set; }
 
         /// <summary>
         /// Time(in minutes) required for the setup of the event.
         /// </summary>
-        int SetupTime { get; set; }
+        public int SetupTime { get; set; }
 
         /// <summary>
         /// Time(in minutes) required for the teardown of the event.
         /// </summary>
-        int TeardownTime { get; set; }
+        public int TeardownTime { get; set; }
 
         /// <summary>
         /// Event description.
         /// </summary>
-        string Description { get; set; }
+        public string Description { get; set; }
     }
 }

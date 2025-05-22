@@ -1,22 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
-    public class EventSeat
+    public class EventSeat : BaseEntity
     {
+        public EventSeat()
+        {
+            Prices = new HashSet<Price>();
+        }
+
         /// <summary>
         /// Id of the seat it refers to.
         /// </summary>
-        [Key]
-        [Column(Order = 0)]
         public int SeatId { get; set; }
 
         /// <summary>
         /// Id of the event it belongs to.
         /// </summary>
-        [Key]
-        [Column(Order = 1)]
         public int EventId { get; set; }
 
         /// <summary>
@@ -35,6 +38,10 @@ namespace TicketingSystemDAL.Entities
 
         [ForeignKey("StatusId")]
         public virtual EventSeatStatus Status { get; set; }
+
+        public Cart Cart { get; set; }
+
+        public virtual ICollection<Price> Prices { get; set; }
 
         #endregion
     }

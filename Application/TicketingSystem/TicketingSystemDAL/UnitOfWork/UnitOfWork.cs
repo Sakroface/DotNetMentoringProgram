@@ -15,7 +15,6 @@ namespace TicketingSystemDAL.UnitOfWork
         private bool _disposed = false;
 
         private IRepository<EventStatus> _eventStatusRepository;
-        private IRepository<Venue> _venueRepository;
         private IRepository<VenueType> _venueTypeRepository;
         private IRepository<SeatsType> _seatsTypeRepository;
         private IRepository<VenueSection> _venueSectionRepository;
@@ -24,8 +23,16 @@ namespace TicketingSystemDAL.UnitOfWork
         private IRepository<EventSeat> _eventSeatRepository;
         private IRepository<SeatStatus> _seatStatusRepository;
         private IRepository<EventVenue> _eventVenueRepository;
+        private IRepository<Payment> _paymentRepository;
+        private IRepository<PaymentStatus> _paymentStatusRepository;
+        private IRepository<OrderStatus> _orderStatusRepository;
+        private IRepository<CartStatus> _cartStatusRepository;
+        private IRepository<Price> _priceRepository;
         private IEventRepository _eventRepository;
-        private IVenueRepository _venueDetailRepository;
+        private IVenueRepository _venueRepository;
+        private IOrderRepository _orderRepository;
+        private ICartRepository _cartRepository;
+        private IUserRepository _userRepository;
 
         public UnitOfWork(TicketingSystemDbContext context)
         {
@@ -34,9 +41,6 @@ namespace TicketingSystemDAL.UnitOfWork
 
         public IRepository<EventStatus> EventStatusRepository =>
             _eventStatusRepository ??= new Repository<EventStatus>(_context);
-
-        public IRepository<Venue> VenueRepository =>
-            _venueRepository ??= new Repository<Venue>(_context);
 
         public IRepository<VenueType> VenueTypeRepository =>
             _venueTypeRepository ??= new Repository<VenueType>(_context);
@@ -62,11 +66,35 @@ namespace TicketingSystemDAL.UnitOfWork
         public IRepository<EventVenue> EventVenueRepository =>
             _eventVenueRepository ??= new Repository<EventVenue>(_context);
 
+        public IRepository<Payment> PaymentRepository =>
+            _paymentRepository ??= new Repository<Payment>(_context);
+
+        public IRepository<PaymentStatus> PaymentStatusRepository =>
+            _paymentStatusRepository ??= new Repository<PaymentStatus>(_context);
+
+        public IRepository<OrderStatus> OrderStatusRepository =>
+            _orderStatusRepository ??= new Repository<OrderStatus>(_context);
+
+        public IRepository<CartStatus> CartStatusRepository =>
+            _cartStatusRepository ??= new Repository<CartStatus>(_context);
+
+        public IRepository<Price> PriceRepository =>
+            _priceRepository ??= new Repository<Price>(_context);
+
         public IEventRepository EventRepository =>
             _eventRepository ??= new EventRepository(_context);
 
-        public IVenueRepository VenueDetailRepository =>
-            _venueDetailRepository ??= new VenueRepository(_context);
+        public IVenueRepository VenueRepository =>
+            _venueRepository ??= new VenueRepository(_context);
+
+        public ICartRepository CartRepository =>
+           _cartRepository ??= new CartRepository(_context);
+
+        public IOrderRepository OrderRepository =>
+           _orderRepository ??= new OrderRepository(_context);
+
+        public IUserRepository UserRepository =>
+            _userRepository ??= new UserRepository(_context);
 
         public void BeginTransaction()
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {

@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TicketingSystemBLL.Objects;
+using TicketingSystemBLL.DTO;
 using TicketingSystemBLL.Services.Interfaces;
+using TicketingSystemDAL.Entities;
 using TicketingSystemDAL.UnitOfWork;
 
 namespace TicketingSystemBLL.Services
@@ -26,48 +27,195 @@ namespace TicketingSystemBLL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public bool CreateEvent(Event obj)
+        public async Task ApproveEventAsync(int eventId)
         {
-            var result = false;
             try
             {
-                if (obj is null)
+                if (eventId <= 0)
                 {
-                    throw new ArgumentNullException("EventService.CreateEvent. Event object was null.");
+                    throw new ArgumentNullException("EventService.ApproveEventAsync. Event Id cannot be 0 or less.");
                 }
-                _unitOfWork.BeginTransaction();
 
-                
-                
-
-                _unitOfWork.CommitTransaction();
-
+                await UpdateEventStatusAsync(eventId, Enums.EventStatus.Approved);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 _unitOfWork.RollbackTransaction();
-            }
 
-            return result;
+                throw;
+            }
         }
 
-        public async Task<IEnumerable<Event>> GetAllEventsAsync()
+        public async Task CancelEventAsync(int eventId)
+        {
+            try
+            {
+                if (eventId <= 0)
+                {
+                    throw new ArgumentNullException("EventService.CancelEventAsync. Event Id cannot be 0 or less.");
+                }
+
+                await UpdateEventStatusAsync(eventId, Enums.EventStatus.Cancelled);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _unitOfWork.RollbackTransaction();
+
+                throw;
+            }
+        }
+
+        public async Task<int> CreateEventAsync(EventDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    throw new ArgumentNullException("EventService.CreateEventAsync. Event object was null.");
+                }
+
+                _unitOfWork.BeginTransaction();
+
+                var entity = _mapper.Map<Event>(dto);
+
+                await _unitOfWork.EventRepository.InsertAsync(entity).ConfigureAwait(false);
+
+                _unitOfWork.CommitTransaction();
+
+                return entity.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _unitOfWork.RollbackTransaction();
+
+                throw;
+            }
+        }
+
+        public void DeleteEvent(int eventId)
+        {
+            try
+            {
+                if (eventId <= 0)
+                {
+                    throw new ArgumentNullException("EventService.DeleteEvent. Event Id cannot be 0 or less.");
+                }
+
+                _unitOfWork.BeginTransaction();
+
+                _unitOfWork.EventRepository.Delete(eventId);
+
+                _unitOfWork.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _unitOfWork.RollbackTransaction();
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<EventDto>> GetAllEventsAsync()
         {
             try
             {
                 var result = await _unitOfWork.EventRepository.GetAllAsync().ConfigureAwait(false);
                 if (result != null && result.Any())
                 {
-                    return result.Select(x => _mapper.Map<Event>(x));
+                    var mappedResult = result.Select(x => _mapper.Map<EventDto>(x)).ToList();
+                    return mappedResult;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"EventService.GetAllEventsAsync. Error: {ex.Message}.");
+
+                throw;
             }
             
-            return Enumerable.Empty<Event>(); 
+            return Enumerable.Empty<EventDto>(); 
+        }
+
+        public async Task<EventDto> GetEventByIdAsync(int eventId)
+        {
+            try
+            {
+                if (eventId <= 0)
+                {
+                    throw new ArgumentNullException("EventService.GetEventByIdAsync. Event Id cannot be 0 or less.");
+                }
+
+                var entity = await _unitOfWork.EventRepository.GetByIdAsync(eventId).ConfigureAwait(false);
+                if (entity is null)
+                {
+                    return null;
+                }
+
+                return _mapper.Map<EventDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"EventService.GetEventByIdAsync. Error: {ex.Message}.");
+
+                throw;
+            }
+        }
+
+        public void UpdateEvent(EventDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    throw new ArgumentNullException("EventService.UpdateEventAsync. Event object was null.");
+                }
+
+                _unitOfWork.BeginTransaction();
+
+                var entity = _mapper.Map<Event>(dto);
+
+                _unitOfWork.EventRepository.Update(entity);
+
+                _unitOfWork.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _unitOfWork.RollbackTransaction();
+
+                throw;
+            }
+        }
+
+        public async Task UpdateEventStatusAsync(int eventId, Enums.EventStatus eventStatus)
+        {
+            try
+            {
+                if (eventId <= 0)
+                {
+                    throw new ArgumentNullException("EventService.UpdateEventStatusAsync. Event Id cannot be 0 or less.");
+                }
+
+                _unitOfWork.BeginTransaction();
+
+                var entity = await _unitOfWork.EventRepository.GetByIdAsync(eventId);
+                entity.StatusId = (int)eventStatus;
+
+                _unitOfWork.EventRepository.Update(entity);
+
+                _unitOfWork.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _unitOfWork.RollbackTransaction();
+
+                throw;
+            }
         }
     }
 }

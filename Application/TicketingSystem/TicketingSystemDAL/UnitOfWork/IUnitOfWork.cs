@@ -8,7 +8,6 @@ namespace TicketingSystemDAL.UnitOfWork
     public interface IUnitOfWork : IDisposable
     {
         IRepository<EventStatus> EventStatusRepository { get; }
-        IRepository<Venue> VenueRepository { get; }
         IRepository<VenueType> VenueTypeRepository { get; }
         IRepository<SeatsType> SeatsTypeRepository { get; }
         IRepository<VenueSection> VenueSectionRepository { get; }
@@ -17,8 +16,16 @@ namespace TicketingSystemDAL.UnitOfWork
         IRepository<EventSeat> EventSeatRepository { get; }
         IRepository<SeatStatus> SeatStatusRepository { get; }
         IRepository<EventVenue> EventVenueRepository { get; }
+        IRepository<Payment> PaymentRepository { get; }
+        IRepository<Price> PriceRepository { get; }
+        IRepository<PaymentStatus> PaymentStatusRepository { get; }
+        IRepository<OrderStatus> OrderStatusRepository { get; }
+        IRepository<CartStatus> CartStatusRepository { get; }
         IEventRepository EventRepository { get; }
-        IVenueRepository VenueDetailRepository { get; }
+        IVenueRepository VenueRepository { get; }
+        IOrderRepository OrderRepository { get; }
+        ICartRepository CartRepository { get; }
+        IUserRepository UserRepository { get; }
 
         void Save();
         Task SaveAsync();
