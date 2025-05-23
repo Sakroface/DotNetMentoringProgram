@@ -90,7 +90,8 @@ namespace TicketingSystemBLL.Services
 
                 _unitOfWork.CommitTransaction();
 
-                var dto = await _paymentService.UpdatePaymentStatusAsync(entity.Id, Enums.PaymentStatus.Pending);
+                var cartDto = _mapper.Map<CartDto>(cart);
+                var dto = await _paymentService.UpdatePaymentStatusAsync(entity.Id, cartDto, Enums.PaymentStatus.Pending);
 
                 return dto;
             }

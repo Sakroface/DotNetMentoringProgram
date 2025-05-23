@@ -16,11 +16,13 @@ namespace TicketingSystem.Controllers
         private readonly ILogger<EventController> _logger;
         private readonly IMapper _mapper;
         private readonly IPaymentService _paymentService;
+        private readonly IOrderService _orderService;
 
-        public PaymentController(ILogger<EventController> logger, IMapper mapper, IPaymentService paymentService)
+        public PaymentController(ILogger<EventController> logger, IMapper mapper, IOrderService orderService, IPaymentService paymentService)
         {
             _logger = logger;
             _mapper = mapper;
+            _orderService = orderService;
             _paymentService = paymentService;
         }
 
@@ -63,7 +65,10 @@ namespace TicketingSystem.Controllers
                         new { message = "CartId should be a proper Guid value." });
                 }
 
-                await _paymentService.UpdatePaymentStatusAsync(id, PaymentStatus.Completed);
+                var paymentDto = await _paymentService.GetPaymentAsync(id);
+                var cartDto = await _orderService.GetCartAsync(paymentDto.CartId);
+
+                await _paymentService.UpdatePaymentStatusAsync(id, cartDto, PaymentStatus.Completed);
 
                 return Ok();
             }
@@ -86,7 +91,10 @@ namespace TicketingSystem.Controllers
                         new { message = "CartId should be a proper Guid value." });
                 }
 
-                await _paymentService.UpdatePaymentStatusAsync(id, PaymentStatus.Failed);
+                var paymentDto = await _paymentService.GetPaymentAsync(id);
+                var cartDto = await _orderService.GetCartAsync(paymentDto.CartId);
+
+                await _paymentService.UpdatePaymentStatusAsync(id, cartDto, PaymentStatus.Failed);
 
                 return Ok();
             }

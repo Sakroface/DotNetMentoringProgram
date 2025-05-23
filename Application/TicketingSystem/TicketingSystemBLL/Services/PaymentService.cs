@@ -15,19 +15,17 @@ namespace TicketingSystemBLL.Services
         private readonly ILogger<EventService> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IOrderService _orderService;
         private readonly IEventSeatService _eventSeatService;
 
-        public PaymentService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IOrderService orderService, IEventSeatService eventSeatService)
+        public PaymentService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IEventSeatService eventSeatService)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _orderService = orderService;
             _eventSeatService = eventSeatService;
         }
 
-        public async Task<PaymentDto> UpdatePaymentStatusAsync(Guid paymentId, PaymentStatus status)
+        public async Task<PaymentDto> UpdatePaymentStatusAsync(Guid paymentId, CartDto cartDto, PaymentStatus status)
         {
             try
             {
@@ -45,9 +43,7 @@ namespace TicketingSystemBLL.Services
 
                 var seatStatus = GetSeatStatusFromPaymentStatus(status);
 
-                var cart = await _orderService.GetCartAsync(payment.CartId).ConfigureAwait(false);
-
-                await _eventSeatService.UpdateEventSeatsStatusAsync(cart.EventSeats.Select(es => es.Id), seatStatus).ConfigureAwait(false);
+                await _eventSeatService.UpdateEventSeatsStatusAsync(cartDto.EventSeats.Select(es => es.Id), seatStatus).ConfigureAwait(false);
 
                 _unitOfWork.CommitTransaction();
 

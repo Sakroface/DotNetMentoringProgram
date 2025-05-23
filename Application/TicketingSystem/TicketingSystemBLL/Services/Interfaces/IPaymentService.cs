@@ -21,8 +21,9 @@ namespace TicketingSystemBLL.Services.Interfaces
         /// Method to retrieve payment status.
         /// </summary>
         /// <param name="paymentId">Unique identifier for the payment.</param>
+        /// <param name="cartDto">Cart that is assiciated with the payment.</param>
         /// <param name="status">Status that will be assigned to the selected payment.</param>
         /// <returns>Task after code execution.</returns>
-        Task<PaymentDto> UpdatePaymentStatusAsync(Guid paymentId, PaymentStatus status);
+        Task<PaymentDto> UpdatePaymentStatusAsync(Guid paymentId, CartDto cartDto, PaymentStatus status);
     }
 }
