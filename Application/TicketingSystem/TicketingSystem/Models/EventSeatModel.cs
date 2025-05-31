@@ -38,6 +38,11 @@ namespace TicketingSystem.Models
         }
 
         /// <summary>
+        /// Constructor by default. Is needed for serializations purposes.
+        /// </summary>
+        public EventSeatModel() { }
+
+        /// <summary>
         /// Unique identifier.
         /// </summary>
         public int Id { get; set; }

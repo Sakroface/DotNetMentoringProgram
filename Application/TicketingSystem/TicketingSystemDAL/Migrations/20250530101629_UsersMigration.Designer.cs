@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketingSystemDAL.EntityFramework;
 
 namespace TicketingSystemDAL.Migrations
 {
     [DbContext(typeof(TicketingSystemDbContext))]
-    partial class TicketingSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530101629_UsersMigration")]
+    partial class UsersMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,11 +24,13 @@ namespace TicketingSystemDAL.Migrations
             modelBuilder.Entity("TicketingSystemDAL.Entities.Cart", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("EventId")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("PriceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -37,6 +41,8 @@ namespace TicketingSystemDAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("PriceId");
 
                     b.HasIndex("StatusId");
 
@@ -188,6 +194,9 @@ namespace TicketingSystemDAL.Migrations
                     b.Property<Guid>("CartId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -252,7 +261,8 @@ namespace TicketingSystemDAL.Migrations
                     b.HasIndex("CartId")
                         .IsUnique();
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.HasIndex("StatusId");
 
@@ -292,9 +302,14 @@ namespace TicketingSystemDAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int>("SeatTypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventSeatId");
+
+                    b.HasIndex("SeatTypeId");
 
                     b.ToTable("Prices");
                 });
@@ -487,6 +502,12 @@ namespace TicketingSystemDAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TicketingSystemDAL.Entities.Price", "Price")
+                        .WithMany()
+                        .HasForeignKey("PriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TicketingSystemDAL.Entities.CartStatus", "Status")
                         .WithMany("Carts")
                         .HasForeignKey("StatusId")
@@ -500,6 +521,8 @@ namespace TicketingSystemDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Event");
+
+                    b.Navigation("Price");
 
                     b.Navigation("Status");
 
@@ -605,8 +628,8 @@ namespace TicketingSystemDAL.Migrations
                         .IsRequired();
 
                     b.HasOne("TicketingSystemDAL.Entities.Order", "Order")
-                        .WithMany("Payments")
-                        .HasForeignKey("OrderId")
+                        .WithOne("Payment")
+                        .HasForeignKey("TicketingSystemDAL.Entities.Payment", "OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -631,7 +654,15 @@ namespace TicketingSystemDAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TicketingSystemDAL.Entities.SeatsType", "SeatType")
+                        .WithMany()
+                        .HasForeignKey("SeatTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("EventSeat");
+
+                    b.Navigation("SeatType");
                 });
 
             modelBuilder.Entity("TicketingSystemDAL.Entities.Venue", b =>
@@ -735,7 +766,7 @@ namespace TicketingSystemDAL.Migrations
 
             modelBuilder.Entity("TicketingSystemDAL.Entities.Order", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("TicketingSystemDAL.Entities.OrderStatus", b =>

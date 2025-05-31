@@ -44,6 +44,10 @@ namespace TicketingSystemDAL.EntityFramework
 
         public DbSet<Price> Prices { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Configure composite keys
@@ -102,7 +106,11 @@ namespace TicketingSystemDAL.EntityFramework
 
             modelBuilder.Entity<Cart>()
                 .Property(e => e.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Payment>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
 
 
             modelBuilder.Entity<Order>(entity =>
@@ -132,8 +140,8 @@ namespace TicketingSystemDAL.EntityFramework
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(e => e.Order)
-                    .WithOne(o => o.Payment)
-                    .HasForeignKey<Payment>(e => e.OrderId)
+                    .WithMany(o => o.Payments)
+                    .HasForeignKey(e => e.OrderId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

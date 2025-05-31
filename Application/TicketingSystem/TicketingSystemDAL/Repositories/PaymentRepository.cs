@@ -9,17 +9,16 @@ using TicketingSystemDAL.Repositories.Interfaces;
 
 namespace TicketingSystemDAL.Repositories
 {
-    public class CartRepository : Repository<Cart>, ICartRepository
+    public class PaymentRepository : Repository<Payment>, IPaymentRepository
     {
-        public CartRepository(TicketingSystemDbContext context) : base(context)
+        public PaymentRepository(TicketingSystemDbContext context) : base(context)
         { }
 
-        public async Task<Cart> GetCartWithSeatsAsync(Guid id)
+        public async Task<Payment> GetPaymentByCartIdAsync(Guid id)
         {
-            return await DbSet.Include(e => e.EventSeats)
-                              .Include("EventSeats.Prices")
+            return await DbSet.Include(e => e.Cart)
                               .Include(e => e.Status)
-                              .FirstOrDefaultAsync(e => e.Id == id);
+                              .FirstOrDefaultAsync(e => e.CartId == id);
         }
     }
 }

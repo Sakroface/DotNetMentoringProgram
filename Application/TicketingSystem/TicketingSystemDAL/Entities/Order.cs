@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
     public class Order : BaseGuidEntity
     {
-        public Guid CartId { get; set; }
+        public Order()
+        {
+            Payments = new HashSet<Payment>();
+        }
 
-        public Guid PaymentId { get; set; }
+        public Guid CartId { get; set; }
 
         public int StatusId { get; set; }
 
@@ -19,7 +23,7 @@ namespace TicketingSystemDAL.Entities
 
         public virtual Cart Cart { get; set; }
 
-        public virtual Payment Payment { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
 
         public virtual OrderStatus Status { get; set; }
 

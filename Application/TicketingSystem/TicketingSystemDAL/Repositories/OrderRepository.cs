@@ -6,7 +6,7 @@ namespace TicketingSystemDAL.Repositories
 {
     public class OrderRepository : Repository<Order>, IOrderRepository
     {
-        public OrderRepository(TicketingSystemDbContext context) : base(context) 
+        public OrderRepository(TicketingSystemDbContext context) : base(context)
         { }
     }
 }

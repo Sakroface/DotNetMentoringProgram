@@ -16,11 +16,11 @@ namespace TicketingSystemDAL.UnitOfWork
         IRepository<EventSeat> EventSeatRepository { get; }
         IRepository<SeatStatus> SeatStatusRepository { get; }
         IRepository<EventVenue> EventVenueRepository { get; }
-        IRepository<Payment> PaymentRepository { get; }
         IRepository<Price> PriceRepository { get; }
         IRepository<PaymentStatus> PaymentStatusRepository { get; }
         IRepository<OrderStatus> OrderStatusRepository { get; }
         IRepository<CartStatus> CartStatusRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
         IEventRepository EventRepository { get; }
         IVenueRepository VenueRepository { get; }
         IOrderRepository OrderRepository { get; }
