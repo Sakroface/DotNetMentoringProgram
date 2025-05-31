@@ -23,11 +23,11 @@ namespace TicketingSystemDAL.UnitOfWork
         private IRepository<EventSeat> _eventSeatRepository;
         private IRepository<SeatStatus> _seatStatusRepository;
         private IRepository<EventVenue> _eventVenueRepository;
-        private IRepository<Payment> _paymentRepository;
         private IRepository<PaymentStatus> _paymentStatusRepository;
         private IRepository<OrderStatus> _orderStatusRepository;
         private IRepository<CartStatus> _cartStatusRepository;
         private IRepository<Price> _priceRepository;
+        private IPaymentRepository _paymentRepository;
         private IEventRepository _eventRepository;
         private IVenueRepository _venueRepository;
         private IOrderRepository _orderRepository;
@@ -66,9 +66,6 @@ namespace TicketingSystemDAL.UnitOfWork
         public IRepository<EventVenue> EventVenueRepository =>
             _eventVenueRepository ??= new Repository<EventVenue>(_context);
 
-        public IRepository<Payment> PaymentRepository =>
-            _paymentRepository ??= new Repository<Payment>(_context);
-
         public IRepository<PaymentStatus> PaymentStatusRepository =>
             _paymentStatusRepository ??= new Repository<PaymentStatus>(_context);
 
@@ -80,6 +77,9 @@ namespace TicketingSystemDAL.UnitOfWork
 
         public IRepository<Price> PriceRepository =>
             _priceRepository ??= new Repository<Price>(_context);
+
+        public IPaymentRepository PaymentRepository =>
+            _paymentRepository ??= new PaymentRepository(_context);
 
         public IEventRepository EventRepository =>
             _eventRepository ??= new EventRepository(_context);

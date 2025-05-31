@@ -66,8 +66,10 @@ namespace TicketingSystemBLL.Services
         {
             try
             {
-                var cart = await _unitOfWork.CartRepository.GetByIdAsync(cartId).ConfigureAwait(false);
-                if (cart is null || !cart.EventSeats.Any())
+                PaymentDto paymentDto = null;
+
+                var cart = await _unitOfWork.CartRepository.GetCartWithSeatsAsync(cartId).ConfigureAwait(false);
+                if (cart is null || cart.EventSeats is null || cart.EventSeats.Count == 0)
                 {
                     return null;
                 }
@@ -76,24 +78,32 @@ namespace TicketingSystemBLL.Services
 
                 var seatIds = cart.EventSeats.Select(cs => cs.SeatId).ToList();
 
-                var paymentDto = new PaymentDto
+                var payment = await _unitOfWork.PaymentRepository.GetPaymentByCartIdAsync(cart.Id).ConfigureAwait(false);
+
+                if (payment is null)
                 {
-                    Id = Guid.NewGuid(),
-                    CartId = cartId,
-                    Amount = cart.EventSeats.Sum(cs => cs.Prices.FirstOrDefault(p => p.IsActive).Amount),
-                    TimeStamp = DateTime.UtcNow
-                };
+                    paymentDto = new PaymentDto
+                    {
+                        CartId = cartId,
+                        Amount = cart.EventSeats.Sum(cs => cs.Prices.FirstOrDefault(p => p.IsActive).Amount),
+                        TimeStamp = DateTime.UtcNow,
+                        Status = Enums.PaymentStatus.Pending
+                    };
 
-                var entity = _mapper.Map<Payment>(paymentDto);
+                    var entity = _mapper.Map<Payment>(paymentDto);
 
-                await _unitOfWork.PaymentRepository.InsertAsync(entity).ConfigureAwait(false);
+                    await _unitOfWork.PaymentRepository.InsertAsync(entity).ConfigureAwait(false);
 
-                _unitOfWork.CommitTransaction();
+                    _unitOfWork.CommitTransaction();
 
-                var cartDto = _mapper.Map<CartDto>(cart);
-                var dto = await _paymentService.UpdatePaymentStatusAsync(entity.Id, cartDto, Enums.PaymentStatus.Pending);
+                    paymentDto.Id = entity.Id; 
+                }
+                else
+                {
+                    paymentDto = _mapper.Map<PaymentDto>(payment);
+                }
 
-                return dto;
+                return paymentDto;
             }
             catch (Exception ex)
             {
@@ -180,7 +190,7 @@ namespace TicketingSystemBLL.Services
         {
             try
             {
-                var cart = await _unitOfWork.CartRepository.GetByIdAsync(eventSeatDto.CartId).ConfigureAwait(false);
+                var cart = await _unitOfWork.CartRepository.GetCartWithSeatsAsync(eventSeatDto.CartId).ConfigureAwait(false);
                 if (cart is null)
                 {
                     throw new ArgumentException($"Cart with Id: {eventSeatDto.CartId} was not found.");

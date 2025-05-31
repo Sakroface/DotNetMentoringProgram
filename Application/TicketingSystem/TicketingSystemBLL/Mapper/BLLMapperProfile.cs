@@ -55,6 +55,7 @@ namespace TicketingSystemBLL.Mapper
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
                     src.Status != null ? (Enums.PaymentStatus)src.Status.Id : default(Enums.PaymentStatus)));
             CreateMap<PaymentDto, Payment>()
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
                 .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => (int)src.Status));
 
             CreateMap<EventSeat, EventSeatDto>()

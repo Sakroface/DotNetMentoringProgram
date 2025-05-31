@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketingSystemDAL.EntityFramework;
 
 namespace TicketingSystemDAL.Migrations
 {
     [DbContext(typeof(TicketingSystemDbContext))]
-    partial class TicketingSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530103944_EventSeatPrice")]
+    partial class EventSeatPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,11 +24,13 @@ namespace TicketingSystemDAL.Migrations
             modelBuilder.Entity("TicketingSystemDAL.Entities.Cart", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("EventId")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("PriceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -37,6 +41,8 @@ namespace TicketingSystemDAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("PriceId");
 
                     b.HasIndex("StatusId");
 
@@ -487,6 +493,12 @@ namespace TicketingSystemDAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TicketingSystemDAL.Entities.Price", "Price")
+                        .WithMany()
+                        .HasForeignKey("PriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TicketingSystemDAL.Entities.CartStatus", "Status")
                         .WithMany("Carts")
                         .HasForeignKey("StatusId")
@@ -500,6 +512,8 @@ namespace TicketingSystemDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Event");
+
+                    b.Navigation("Price");
 
                     b.Navigation("Status");
 

@@ -25,11 +25,6 @@ namespace TicketingSystemDAL.Entities
         public int StatusId { get; set; }
 
         /// <summary>
-        /// Price for the seats.
-        /// </summary>
-        public Guid PriceId { get; set; } 
-
-        /// <summary>
         /// Id of the user that cart belongs to.
         /// </summary>
         public Guid UserId { get; set; }
@@ -51,11 +46,6 @@ namespace TicketingSystemDAL.Entities
         /// One to one.
         /// </summary>
         public virtual Payment Payment { get; set; }
-
-        /// <summary>
-        /// Price for the Cart.
-        /// </summary>
-        public virtual Price Price { get; set; }
 
         /// <summary>
         /// Seats added to the cart.

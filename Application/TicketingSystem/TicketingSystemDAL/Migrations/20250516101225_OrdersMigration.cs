@@ -112,7 +112,7 @@ namespace TicketingSystemDAL.Migrations
                         column: x => x.SeatTypeId,
                         principalTable: "SeatsTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +161,7 @@ namespace TicketingSystemDAL.Migrations
                         column: x => x.PriceId,
                         principalTable: "Prices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Cart_User_UserId",
                         column: x => x.UserId,
