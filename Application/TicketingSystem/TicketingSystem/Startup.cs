@@ -33,7 +33,7 @@ namespace TicketingSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddMemoryCache();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -69,6 +69,7 @@ namespace TicketingSystem
             }
 
             app.UseHttpsRedirection();
+            app.UseResponseCaching();
 
             app.UseRouting();
 
@@ -79,13 +80,16 @@ namespace TicketingSystem
                 endpoints.MapControllers();
             });
 
+
             //dbContext.Database.EnsureCreated();
 
-            //SeedData(dbContext);
+            SeedData(dbContext);
         }
 
         private static void SeedData(TicketingSystemDbContext dbContext)
         {
+            /*
+            */
             var eventStatuses = InitEventStatuses(dbContext);
             var seatsTypes = InitSeatsTypes(dbContext);
             var venueTypes = InitVenueTypes(dbContext);
@@ -94,10 +98,10 @@ namespace TicketingSystem
             var orderStatuses = InitOrderStatuses(dbContext);
             var cartStatuses = InitCartStatuses(dbContext);
             var paymentStatuses = InitPaymentStatuses(dbContext);
-
+            /*
             InitializeEvents(dbContext, eventStatuses);
             InitializeVenues(dbContext, venueTypes, seatsTypes);
-
+            */
             dbContext.SaveChanges();
         }
 
@@ -227,6 +231,7 @@ namespace TicketingSystem
                 new Event()
                 {
                     Name = "Cold Play Grand Concert.",
+                    LastModified = DateTime.Now,
                     Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In lectus magna, lacinia eu semper non, rutrum ut nisi. Morbi volutpat gravida leo a efficitur. Vestibulum dapibus quam ex, ac semper sapien molestie et. Nunc ac nibh vitae arcu imperdiet tempus eget quis erat. Cras non lectus vitae odio blandit aliquam a id lectus. Nunc lacus dolor, pharetra vitae congue ac, mattis eget eros. Vivamus ultricies rhoncus elit. Sed et risus vitae turpis tincidunt lobortis vitae nec nisi. Duis tempus posuere tempus. Aenean quam mi, faucibus sit amet risus ut, pulvinar dignissim metus. Vestibulum turpis dui, dapibus ut nulla eget, fringilla iaculis dui.\n\t Duis ornare lectus at erat convallis blandit. Nunc id interdum nibh, in eleifend ex. Donec ac erat sed risus viverra pulvinar. Donec ac neque aliquet, blandit urna at, lobortis dolor. Nullam sit amet tortor neque. Vestibulum faucibus varius dui, eu cursus est finibus at. Vivamus nec semper sem. Mauris at aliquet enim. Nulla imperdiet risus quis tincidunt fermentum. Aenean eleifend vel metus at sollicitudin. Suspendisse luctus fermentum risus vitae porta.\n\tNam sed lectus id turpis suscipit elementum. Proin in justo ac nisi tincidunt dictum id ac metus. Nam at sagittis sapien. Etiam lacinia neque vitae est sodales congue. Sed lobortis, dolor sed vestibulum ultricies, libero leo euismod risus, sed pulvinar urna lectus sed velit. Aenean finibus vel justo id pharetra. Phasellus fermentum turpis nec mauris pretium bibendum. Vestibulum porttitor sapien risus, finibus porta nibh porta non. Donec a maximus erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent iaculis risus non pretium vulputate. Etiam imperdiet posuere orci, non dignissim purus ullamcorper in. Curabitur tristique a velit a lobortis. Vestibulum fringilla dolor pulvinar, egestas lectus a, pellentesque arcu. Duis varius rhoncus metus, ut malesuada risus hendrerit et. Praesent quam ligula, mattis vitae elementum non, hendrerit eu sem.\n\tDonec elementum ligula erat, eget cursus felis lacinia quis. Aenean accumsan eget ex ac consectetur. Suspendisse fringilla tellus quis sem dictum sodales. Quisque a congue urna, non congue lorem. Cras volutpat mauris vitae sagittis porta. Cras metus mi, porta nec finibus vel, tempor eget lectus. Phasellus ut velit ornare, porta dui id, maximus magna. Etiam elit metus, tristique sit amet volutpat ut, feugiat sit amet erat. Aenean tellus nibh, vulputate eu sem non, convallis volutpat sem. Cras tortor lacus, viverra nec placerat ut, gravida sit amet nibh. Pellentesque sit amet consectetur lorem.\n\tSed faucibus sit amet magna id euismod. Vivamus volutpat, libero eu molestie efficitur, est tortor hendrerit neque, nec facilisis massa sapien id diam. Vestibulum euismod, tortor nec porta tempor, dolor nisi auctor magna, sit amet tristique eros sapien eu enim. In volutpat nulla sit amet justo ornare, sit amet congue magna fermentum. Integer eget pharetra dolor. Quisque consectetur pharetra nisl vel mollis. In accumsan leo sed dolor aliquet, eu pulvinar purus eleifend. Vivamus nulla purus, varius ac ipsum in, blandit molestie lorem. Aenean imperdiet ornare metus in tempus. Ut eu lacus pellentesque, dapibus tellus ac, tincidunt dolor. Aenean luctus posuere arcu, et molestie quam euismod id." ,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(2),
@@ -237,6 +242,7 @@ namespace TicketingSystem
                 new Event()
                 {
                     Name = "President election debates",
+                    LastModified = DateTime.Now,
                     Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In lectus magna, lacinia eu semper non, rutrum ut nisi. Morbi volutpat gravida leo a efficitur. Vestibulum dapibus quam ex, ac semper sapien molestie et. Nunc ac nibh vitae arcu imperdiet tempus eget quis erat. Cras non lectus vitae odio blandit aliquam a id lectus. Nunc lacus dolor, pharetra vitae congue ac, mattis eget eros. Vivamus ultricies rhoncus elit. Sed et risus vitae turpis tincidunt lobortis vitae nec nisi. Duis tempus posuere tempus. Aenean quam mi, faucibus sit amet risus ut, pulvinar dignissim metus. Vestibulum turpis dui, dapibus ut nulla eget, fringilla iaculis dui.\n\t Duis ornare lectus at erat convallis blandit. Nunc id interdum nibh, in eleifend ex. Donec ac erat sed risus viverra pulvinar. Donec ac neque aliquet, blandit urna at, lobortis dolor. Nullam sit amet tortor neque. Vestibulum faucibus varius dui, eu cursus est finibus at. Vivamus nec semper sem. Mauris at aliquet enim. Nulla imperdiet risus quis tincidunt fermentum. Aenean eleifend vel metus at sollicitudin. Suspendisse luctus fermentum risus vitae porta.\n\tNam sed lectus id turpis suscipit elementum. Proin in justo ac nisi tincidunt dictum id ac metus. Nam at sagittis sapien. Etiam lacinia neque vitae est sodales congue. Sed lobortis, dolor sed vestibulum ultricies, libero leo euismod risus, sed pulvinar urna lectus sed velit. Aenean finibus vel justo id pharetra. Phasellus fermentum turpis nec mauris pretium bibendum. Vestibulum porttitor sapien risus, finibus porta nibh porta non. Donec a maximus erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent iaculis risus non pretium vulputate. Etiam imperdiet posuere orci, non dignissim purus ullamcorper in. Curabitur tristique a velit a lobortis. Vestibulum fringilla dolor pulvinar, egestas lectus a, pellentesque arcu. Duis varius rhoncus metus, ut malesuada risus hendrerit et. Praesent quam ligula, mattis vitae elementum non, hendrerit eu sem.\n\tDonec elementum ligula erat, eget cursus felis lacinia quis. Aenean accumsan eget ex ac consectetur. Suspendisse fringilla tellus quis sem dictum sodales. Quisque a congue urna, non congue lorem. Cras volutpat mauris vitae sagittis porta. Cras metus mi, porta nec finibus vel, tempor eget lectus. Phasellus ut velit ornare, porta dui id, maximus magna. Etiam elit metus, tristique sit amet volutpat ut, feugiat sit amet erat. Aenean tellus nibh, vulputate eu sem non, convallis volutpat sem. Cras tortor lacus, viverra nec placerat ut, gravida sit amet nibh. Pellentesque sit amet consectetur lorem.\n\tSed faucibus sit amet magna id euismod. Vivamus volutpat, libero eu molestie efficitur, est tortor hendrerit neque, nec facilisis massa sapien id diam. Vestibulum euismod, tortor nec porta tempor, dolor nisi auctor magna, sit amet tristique eros sapien eu enim. In volutpat nulla sit amet justo ornare, sit amet congue magna fermentum. Integer eget pharetra dolor. Quisque consectetur pharetra nisl vel mollis. In accumsan leo sed dolor aliquet, eu pulvinar purus eleifend. Vivamus nulla purus, varius ac ipsum in, blandit molestie lorem. Aenean imperdiet ornare metus in tempus. Ut eu lacus pellentesque, dapibus tellus ac, tincidunt dolor. Aenean luctus posuere arcu, et molestie quam euismod id." ,
                     StartDate = DateTime.Now.AddYears(1),
                     EndDate = DateTime.Now.AddYears(1).AddHours(2),

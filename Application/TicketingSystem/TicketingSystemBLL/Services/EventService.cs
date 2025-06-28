@@ -76,6 +76,8 @@ namespace TicketingSystemBLL.Services
                     throw new ArgumentNullException("EventService.CreateEventAsync. Event object was null.");
                 }
 
+                dto.LastModified = DateTime.Now;
+
                 _unitOfWork.BeginTransaction();
 
                 var entity = _mapper.Map<Event>(dto);
@@ -174,6 +176,8 @@ namespace TicketingSystemBLL.Services
                     throw new ArgumentNullException("EventService.UpdateEventAsync. Event object was null.");
                 }
 
+                dto.LastModified = DateTime.Now;
+
                 _unitOfWork.BeginTransaction();
 
                 var entity = _mapper.Map<Event>(dto);
@@ -203,6 +207,7 @@ namespace TicketingSystemBLL.Services
                 _unitOfWork.BeginTransaction();
 
                 var entity = await _unitOfWork.EventRepository.GetByIdAsync(eventId);
+                entity.LastModified = DateTime.Now;
                 entity.StatusId = (int)eventStatus;
 
                 _unitOfWork.EventRepository.Update(entity);

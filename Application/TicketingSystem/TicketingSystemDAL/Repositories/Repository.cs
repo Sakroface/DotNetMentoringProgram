@@ -42,7 +42,7 @@ namespace TicketingSystemDAL.Repositories
         }
 
         ///<inheritdoc/>
-        public async Task<TEntity> GetByIdAsync(object id)
+        public virtual async Task<TEntity> GetByIdAsync(object id)
         {
             if (id == null)
                 throw new ArgumentNullException(nameof(id), "ID cannot be null.");

@@ -24,6 +24,13 @@ namespace TicketingSystemDAL.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// Date and time of the latest changes to the model.
+        /// </summary>
+        [Required]
+        public DateTime LastModified { get; set; }
+
+
+        /// <summary>
         /// Date and time of the start of the event.
         /// </summary>
         [Required]

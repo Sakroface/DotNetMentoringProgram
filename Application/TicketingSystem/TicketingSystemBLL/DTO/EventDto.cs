@@ -19,6 +19,11 @@ namespace TicketingSystemBLL.DTO
         public string Name { get; set; }
 
         /// <summary>
+        /// Date and time of the latest changes to the model.
+        /// </summary>
+        public DateTime LastModified { get; set; }
+
+        /// <summary>
         /// Date and time of the start of the event.
         /// </summary>
         public DateTime StartDate { get; set; }
