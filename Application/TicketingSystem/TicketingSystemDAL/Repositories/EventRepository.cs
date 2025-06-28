@@ -13,6 +13,12 @@ namespace TicketingSystemDAL.Repositories
     {
         public EventRepository(TicketingSystemDbContext context) : base(context) { }
 
+        public override async Task<Event> GetByIdAsync(object id)
+        {
+            return await DbSet.Include(e => e.Status)
+                              .FirstOrDefaultAsync(e => e.Id == (int)id);
+        }
+
         public async Task<IEnumerable<Event>> GetUpcomingEvents(DateTime fromDate)
         {
             return await DbSet.Where(e => e.StartDate >= fromDate).ToListAsync();

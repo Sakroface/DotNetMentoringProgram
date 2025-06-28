@@ -9,8 +9,10 @@ namespace TicketingSystem.MappingProfiles
     { 
         public ModelsMapperProfile()
         { 
-            CreateMap<EventModel, EventDto>();
-            CreateMap<EventDto, EventModel>();
+            CreateMap<EventModel, EventDto>()
+                .ForMember(dest => dest.EventStatus, opt => opt.MapFrom(src => (VenueType)src.StatusId));
+            CreateMap<EventDto, EventModel>()
+                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => (int)src.EventStatus));
 
             CreateMap<VenueDto, VenueModel>();
             CreateMap<VenueModel, VenueDto>();

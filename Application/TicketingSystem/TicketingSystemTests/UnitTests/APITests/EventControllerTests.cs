@@ -2,6 +2,8 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -21,6 +23,8 @@ namespace TicketingSystemTests.APITests
         private readonly Mock<ILogger<EventController>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IEventService> _eventServiceMock;
+        private readonly IMemoryCache _memoryCache;
+        private readonly IConfiguration _configuration;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -28,7 +32,27 @@ namespace TicketingSystemTests.APITests
             _loggerMock = new Mock<ILogger<EventController>>();
             _mapperMock = new Mock<IMapper>();
             _eventServiceMock = new Mock<IEventService>();
-            _controller = new EventController(_loggerMock.Object, _mapperMock.Object, _eventServiceMock.Object);
+
+            #region Configuration setup
+
+            var configBuilder = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    {"ALL_EVENTS_CACHE_KEY", "all_events_test"},
+                    {"EVENT_CACHE_KEY_PREFIX", "event_test_"}
+                });
+
+            _configuration = configBuilder.Build();
+
+            #endregion
+
+            #region Memory cache setup
+
+            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+            #endregion
+
+            _controller = new EventController(_loggerMock.Object, _mapperMock.Object, _eventServiceMock.Object, _memoryCache, _configuration);
         }
 
         #region GetAllEventsAsync Tests
@@ -162,11 +186,10 @@ namespace TicketingSystemTests.APITests
             var result = await _controller.CreateEventAsync(eventModel);
 
             // Assert
-            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal("CreateEventAsync", createdAtActionResult.ActionName);
+            var objectResult = Assert.IsType<ObjectResult>(result.Result);
+            Assert.Equal(StatusCodes.Status201Created, objectResult.StatusCode);
 
-            // Fluent assertion to validate the response result with id.
-            createdAtActionResult.Value.Should().BeEquivalentTo(new { id = 1 });
+            objectResult.Value.Should().BeEquivalentTo(new { id = 1 });
         }
 
         [Fact]

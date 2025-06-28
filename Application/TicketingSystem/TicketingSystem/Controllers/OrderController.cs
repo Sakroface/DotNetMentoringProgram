@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -17,12 +19,24 @@ namespace TicketingSystem.Controllers
         private readonly ILogger<EventController> _logger;
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
+        private readonly IMemoryCache _cache;
+        private readonly IConfiguration _configuration;
+        private readonly string ALL_EVENTS_CACHE_KEY;
+        private readonly string EVENT_CACHE_KEY_PREFIX;
+        private readonly TimeSpan _cacheExpiration;
 
-        public OrderController(ILogger<EventController> logger, IMapper mapper, IOrderService orderService)
+
+        public OrderController(ILogger<EventController> logger, IMapper mapper, IOrderService orderService, IMemoryCache cache, IConfiguration configuration)
         {
             _logger = logger;
             _mapper = mapper;
             _orderService = orderService;
+            _cache = cache;
+            _configuration = configuration;
+
+            ALL_EVENTS_CACHE_KEY = _configuration.GetValue("ALL_EVENTS_CACHE_KEY", string.Empty);
+            EVENT_CACHE_KEY_PREFIX = _configuration.GetValue("EVENT_CACHE_KEY_PREFIX", string.Empty);
+            _cacheExpiration = TimeSpan.FromMinutes(30);
         }
 
         [HttpGet("/carts/{cartId}")]
