@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TicketingSystemDAL.Entities.Base;
@@ -10,7 +9,6 @@ namespace TicketingSystemDAL.Entities
     {
         public EventSeat()
         {
-            Prices = new HashSet<Price>();
         }
 
         /// <summary>
@@ -29,6 +27,26 @@ namespace TicketingSystemDAL.Entities
         [Required]
         public int StatusId { get; set; }
 
+        /// <summary>
+        /// Date and time when the record has been created.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Date and time when the record has been booked.
+        /// </summary>
+        public DateTime BookedAt { get; set; }
+
+        /// <summary>
+        /// Id of the price assigned to the seat.
+        /// </summary>
+        public Guid? PriceId { get; set; }
+
+        /// <summary>
+        /// Id of the cart that seat belongs to.
+        /// </summary>
+        public Guid? CartId { get; set; }
+
         #region Navigational properties for EF.
 
         [ForeignKey("SeatId")]
@@ -40,9 +58,11 @@ namespace TicketingSystemDAL.Entities
         [ForeignKey("StatusId")]
         public virtual EventSeatStatus Status { get; set; }
 
-        public Cart Cart { get; set; }
+        [ForeignKey("PriceId")]
+        public virtual Price Price { get; set; }
 
-        public virtual ICollection<Price> Prices { get; set; }
+        [ForeignKey("CartId")]
+        public virtual Cart Cart { get; set; }
 
         #endregion
     }

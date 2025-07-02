@@ -89,7 +89,6 @@ namespace TicketingSystem
         private static void SeedData(TicketingSystemDbContext dbContext)
         {
             /*
-            */
             var eventStatuses = InitEventStatuses(dbContext);
             var seatsTypes = InitSeatsTypes(dbContext);
             var venueTypes = InitVenueTypes(dbContext);
@@ -98,24 +97,112 @@ namespace TicketingSystem
             var orderStatuses = InitOrderStatuses(dbContext);
             var cartStatuses = InitCartStatuses(dbContext);
             var paymentStatuses = InitPaymentStatuses(dbContext);
-            /*
             InitializeEvents(dbContext, eventStatuses);
             InitializeVenues(dbContext, venueTypes, seatsTypes);
+            var users = InitializeUsers(dbContext);
+            var prices = InitializePrices(dbContext, seatsTypes);
+            InitializeEventVenues(dbContext);
+            InitializeEventSeats(dbContext);
             */
+
             dbContext.SaveChanges();
+        }
+
+        private static void InitializeEventSeats(TicketingSystemDbContext context)
+        {
+            var eventId = context.Events.FirstOrDefault(e => e.Name == "Cold Play Grand Concert.").Id;
+            var prices = context.Prices;
+            var seatStatuses = context.SeatStatuses;
+
+            var venueSeatsQuery = from e in context.Events
+                                  where e.Id == eventId
+                                  from ev in e.EventVenues
+                                  from vs in ev.Venue.VenueSections
+                                  from vr in vs.VenueRows
+                                  from seat in vr.VenueSeats
+                                  select new { EventId = eventId, SeatId = seat.Id, SeatsTypeId = seat.SeatsTypeId };
+
+            var venueSeatsData = venueSeatsQuery.ToList();
+            var priceMap = prices.ToDictionary(p => p.SeatTypeId, p => p.Id);
+
+            var eventSeats = venueSeatsData
+                .Where(data => priceMap.ContainsKey(data.SeatsTypeId))
+                .Select(data => new EventSeat
+                {
+                    EventId = data.EventId,
+                    SeatId = data.SeatId,
+                    PriceId = priceMap[data.SeatsTypeId],
+                    StatusId = seatStatuses.FirstOrDefault(ss => ss.Name == "Available").Id
+                })
+                .ToList();
+
+            context.EventSeats.AddRange(eventSeats);
+            context.SaveChanges();
+        }
+
+        private static void InitializeEventVenues(TicketingSystemDbContext context)
+        {
+            var ev = context.Events.FirstOrDefault(e => e.Name == "Cold Play Grand Concert.");
+            var venue = context.Venues.FirstOrDefault(v => v.Name == "Olympic stadium");
+
+            context.EventVenues.Add(new EventVenue() { EventId = ev.Id, VenueId = venue.Id });
+            context.SaveChanges();
+        }
+
+
+        private static IEnumerable<Price> InitializePrices(TicketingSystemDbContext context, IEnumerable<SeatsType> seatsTypes)
+        {
+            var prices = new List<Price>();
+
+            foreach (var seatsType in seatsTypes)
+            {
+                prices.Add(new Price()
+                {
+                    SeatTypeId = seatsType.Id,
+                    Amount = (TicketingSystemBLL.Enums.SeatType)seatsType.Id == TicketingSystemBLL.Enums.SeatType.VIP ? 3500.45m : 1200.33m,
+                    IsActive = true
+                });
+            }
+
+            context.Prices.AddRange(prices);
+            context.SaveChanges();
+
+            return context.Prices;
+        }
+
+        private static IEnumerable<User> InitializeUsers(TicketingSystemDbContext context)
+        {
+            var users = new List<User>();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                users.Add(new User()
+                {
+                    FirstName = $"Name {i}",
+                    MiddleName = $"MiddleName {i}",
+                    LastName = $"LastName {i}",
+                    UserName = $"username{i}",
+                    Password = $"password{i}"
+                });
+            }
+
+            context.Users.AddRange(users);
+            context.SaveChanges();
+
+            return context.Users;
         }
 
         private static IEnumerable<EventStatus> InitEventStatuses(TicketingSystemDbContext context)
         {
             var eventStatusList = new List<EventStatus>()
             {
-                new EventStatus() { Name = "Created" },
-                new EventStatus() { Name = "Approved" },
-                new EventStatus() { Name = "Setup" },
-                new EventStatus() { Name = "InProgress" },
-                new EventStatus() { Name = "Teardown" },
+                new EventStatus() { Name = "Cancelled" },
                 new EventStatus() { Name = "Completed" },
-                new EventStatus() { Name = "Cancelled" }
+                new EventStatus() { Name = "Teardown" },
+                new EventStatus() { Name = "InProgress" },
+                new EventStatus() { Name = "Setup" },
+                new EventStatus() { Name = "Approved" },
+                new EventStatus() { Name = "Created" }
             };
 
             context.EventStatuses.AddRange(eventStatusList);
@@ -128,8 +215,8 @@ namespace TicketingSystem
         {
             var venueTypeList = new List<VenueType>()
             {
-                new VenueType() { Name = "Stadium" },
                 new VenueType() { Name = "FreeSpaceArena" },
+                new VenueType() { Name = "Stadium" }
             };
 
             context.VenueTypes.AddRange(venueTypeList);
@@ -142,9 +229,9 @@ namespace TicketingSystem
         {
             var eventSeatStatusList = new List<EventSeatStatus>()
             {
-                new EventSeatStatus() { Name = "Available" },
+                new EventSeatStatus() { Name = "Sold" },
                 new EventSeatStatus() { Name = "Booked" },
-                new EventSeatStatus() { Name = "Assigned" }
+                new EventSeatStatus() { Name = "Available" }
             };
 
             context.EventSeatStatuses.AddRange(eventSeatStatusList);
@@ -157,8 +244,8 @@ namespace TicketingSystem
         {
             var seatTypeList = new List<SeatsType>()
             {
-                new SeatsType() { Name = "Basic" },
-                new SeatsType() { Name = "VIP" }
+                new SeatsType() { Name = "VIP" },
+                new SeatsType() { Name = "Basic" }
             };
 
             context.SeatsTypes.AddRange(seatTypeList);
@@ -171,8 +258,8 @@ namespace TicketingSystem
         {
             var seatStatusList = new List<SeatStatus>()
             {
-                new SeatStatus () { Name = "Available" },
-                new SeatStatus () { Name = "NotAvailable" }
+                new SeatStatus () { Name = "NotAvailable" },
+                new SeatStatus () { Name = "Available" }
             };
 
             context.SeatStatuses.AddRange(seatStatusList);
@@ -185,9 +272,9 @@ namespace TicketingSystem
         {
             var seatStatusList = new List<OrderStatus>()
             {
-                new OrderStatus () { Name = "Created" },
-                new OrderStatus () { Name = "PaymentProcessed" },
                 new OrderStatus () { Name = "Cancelled" },
+                new OrderStatus () { Name = "PaymentProcessed" },
+                new OrderStatus () { Name = "Created" }
             };
 
             context.OrderStatuses.AddRange(seatStatusList);
@@ -200,8 +287,8 @@ namespace TicketingSystem
         {
             var seatStatusList = new List<CartStatus>()
             {
-                new CartStatus () { Name = "Created" },
-                new CartStatus () { Name = "Processed" }
+                new CartStatus () { Name = "Processed" },
+                new CartStatus () { Name = "Created" }
             };
 
             context.CartStatuses.AddRange(seatStatusList);
@@ -214,9 +301,9 @@ namespace TicketingSystem
         {
             var seatStatusList = new List<PaymentStatus>()
             {
-                new PaymentStatus () { Name = "Pending" },
+                new PaymentStatus () { Name = "Failed" },
                 new PaymentStatus () { Name = "Completed" },
-                new PaymentStatus () { Name = "Failed" }
+                new PaymentStatus () { Name = "Pending" }
             };
 
             context.PaymentStatuses.AddRange(seatStatusList);
@@ -257,18 +344,21 @@ namespace TicketingSystem
 
         private static void InitializeVenues(TicketingSystemDbContext context, IEnumerable<VenueType> venueTypes, IEnumerable<SeatsType> seatsTypes)
         {
-            var venueList = new List<Venue>()
+            var venueTypeMap = venueTypes.ToDictionary(vt => vt.Name, vt => vt.Id);
+            var seatsTypeMap = seatsTypes.ToDictionary(st => st.Name, st => st.Id);
+
+            var venueList = new List<Venue>
             {
-                new Venue()
+                new Venue
                 {
                     Name = "Olympic stadium",
-                    VenueTypeId = venueTypes.FirstOrDefault(vt => vt.Name.Equals("Stadium")).Id,
+                    VenueTypeId = venueTypeMap["Stadium"],
                     NumberOfSeats = 0,
                 },
-                new Venue()
+                new Venue
                 {
                     Name = "Dance arena",
-                    VenueTypeId = venueTypes.FirstOrDefault(vt => vt.Name.Equals("FreeSpaceArena")).Id,
+                    VenueTypeId = venueTypeMap["FreeSpaceArena"],
                     NumberOfSeats = 1200,
                 }
             };
@@ -276,58 +366,67 @@ namespace TicketingSystem
             context.Venues.AddRange(venueList);
             context.SaveChanges();
 
-            var olympicStadium = context.Venues.FirstOrDefault(venue => venue.VenueTypeId == venueTypes.FirstOrDefault(vt => vt.Name.Equals("Stadium")).Id);
-            InitializeVenuesWithSeats(olympicStadium, seatsTypes, context);
+
+            var olympicStadium = venueList.First(v => v.Name == "Olympic stadium");
+            InitializeVenuesWithSeats(olympicStadium, seatsTypeMap["Basic"], context);
         }
 
-        private static void InitializeVenuesWithSeats(Venue venue, IEnumerable<SeatsType> seatsTypes, TicketingSystemDbContext context)
+        private static void InitializeVenuesWithSeats(Venue venue, int basicSeatTypeId, TicketingSystemDbContext context)
         {
-            Random random = new Random();
+            var random = new Random();
             int totalSeats = 0;
 
-            for (int sectionNum = 0; sectionNum < 24; sectionNum++)
-            {
-                var section = new VenueSection
+            // Create sections
+            var sections = Enumerable.Range(0, 24)
+                .Select(i => new VenueSection
                 {
                     VenueId = venue.Id,
-                    Name = $"Section {sectionNum}"
-                };
+                    Name = $"Section {i}"
+                })
+                .ToList();
 
-                context.VenueSections.Add(section);
-                context.SaveChanges(); 
+            context.VenueSections.AddRange(sections);
+            context.SaveChanges();
 
-                for (int rowNum = 0; rowNum < 50; rowNum++)
-                {
-                    var row = new VenueRow
+            // Process each section separately to manage memory and foreign keys
+            foreach (var section in sections)
+            {
+                // Create rows for this section
+                var rows = Enumerable.Range(0, 50)
+                    .Select(i => new VenueRow
                     {
                         SectionId = section.Id,
-                        Name = $"Row {rowNum}"
-                    };
+                        Name = $"Row {i}"
+                    })
+                    .ToList();
 
-                    context.VenueRows.Add(row);
-                    context.SaveChanges(); 
+                context.VenueRows.AddRange(rows);
+                context.SaveChanges();
 
+                // Create seats for all rows in this section
+                var seats = new List<VenueSeat>();
+                foreach (var row in rows)
+                {
                     var seatsInRow = random.Next(40, 61);
-
-                    for (var seatNum = 0; seatNum <= seatsInRow; seatNum++)
-                    {
-                        var seat = new VenueSeat
+                    var rowSeats = Enumerable.Range(0, seatsInRow + 1)
+                        .Select(seatNum => new VenueSeat
                         {
                             RowId = row.Id,
                             Number = seatNum,
-                            SeatsTypeId = seatsTypes.FirstOrDefault(vt => vt.Name.Equals("Basic")).Id
-                        };
+                            SeatsTypeId = basicSeatTypeId
+                        })
+                        .ToList();
 
-                        context.VenueSeats.Add(seat);
-                        totalSeats++;
-                    }
+                    seats.AddRange(rowSeats);
+                    totalSeats += rowSeats.Count;
                 }
+
+                context.VenueSeats.AddRange(seats);
+                context.SaveChanges();
             }
 
             venue.NumberOfSeats = totalSeats;
             context.SaveChanges();
         }
-
-
     }
 }

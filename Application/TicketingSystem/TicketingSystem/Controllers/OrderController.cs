@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
 using TicketingSystemBLL.DTO;
@@ -91,18 +92,76 @@ namespace TicketingSystem.Controllers
                         new { message = "priceId should be a proper Guid value." });
                 }
 
+                var cartDto = await _orderService.GetCartAsync(id);
+
+                if (cartDto.EventSeats.ToList().Any(es => es.Id == cartItem.SeatId))
+                {
+                    return StatusCode(StatusCodes.Status304NotModified,
+                        new { message = "Seat has already been added to cart." });
+                }
+
                 var model = new EventSeatModel(cartItem.SeatId, cartItem.EventId, 1, priceId, id);
 
                 var dto = _mapper.Map<EventSeatDto>(model);
 
-                var updatedCart = await _orderService.AddSeatToCartAsync(dto);
+                //var updatedCart = await _orderService.AddSeatToCartAsync(dto);
+
+                //Pessimistic concurrency approach 
+                var updatedCart = await _orderService.AddSeatToCartWithPessimisticConcurrencyAsync(dto);
+                
+                //Optimistic concurrency approach 
+                //var updatedCart = await _orderService.AddSeatToCartWithOptimisticConcurrencyAsync(dto);
 
                 if (updatedCart == null)
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound,
+                        new { message = "Could not find seat with the provided id." });
                 }
 
                 return Ok(updatedCart);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"OrderController.AddToCartAsync. Error: {ex.Message}.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "An error occurred while adding item to cart." });
+            }
+        }
+
+        [HttpPost("/orders/carts")]
+        public async Task<ActionResult<CartModel>> AddCartAsync([FromBody] CartModel cartItem)
+        {
+            try
+            {
+                if (cartItem == null || cartItem.EventId <= 0 || cartItem.StatusId <= 0)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        new { message = "Request must include event_id, and status_id." });
+                }
+                /*
+                if (!Guid.TryParse(cartItem.PriceId.ToString(), out Guid priceId))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        new { message = "priceId should be a proper Guid value." });
+                }
+
+                if (!Guid.TryParse(cartItem.UserId.ToString(), out Guid userId))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        new { message = "userId should be a proper Guid value." });
+                }
+                */
+
+                var dto = _mapper.Map<CartDto>(cartItem);
+
+                var cartId = await _orderService.CreateCartAsync(dto);
+
+                if (cartId == Guid.Empty)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+
+                return StatusCode(StatusCodes.Status201Created, new { cartId = cartId });
             }
             catch (Exception ex)
             {

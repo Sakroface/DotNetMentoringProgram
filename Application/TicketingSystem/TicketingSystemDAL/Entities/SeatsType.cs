@@ -16,6 +16,7 @@ namespace TicketingSystemDAL.Entities
         {
             VenueTypes = new HashSet<VenueType>();
             VenueSeats = new HashSet<VenueSeat>();
+            Prices = new HashSet<Price>();
         }
 
         /// <summary>
@@ -30,6 +31,8 @@ namespace TicketingSystemDAL.Entities
         public virtual ICollection<VenueType> VenueTypes { get; set; }
 
         public virtual ICollection<VenueSeat> VenueSeats { get; set; }
+
+        public virtual ICollection<Price> Prices { get; set; }
 
         #endregion
     }

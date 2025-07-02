@@ -236,7 +236,7 @@ namespace TicketingSystem.IntegrationTests
             {
                 Amount = 50.00m,
                 IsActive = true,
-                EventSeatId = testSeat.Id
+                SeatTypeId = testVenueSeat.SeatsTypeId
             };
             dbContext.Prices.Add(testPrice);
             dbContext.SaveChanges();

@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using TicketingSystemDAL.Entities;
 using TicketingSystemDAL.EntityFramework;
@@ -100,6 +102,22 @@ namespace TicketingSystemDAL.UnitOfWork
         {
             _transaction = _context.Database.BeginTransaction();
         }
+
+        public void BeginTransaction(IsolationLevel isolationLevel)
+        {
+            _transaction = _context.Database.BeginTransaction(isolationLevel);
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task BeginTransactionAsync(IsolationLevel isolationLevel)
+        {
+            _transaction = await _context.Database.BeginTransactionAsync(isolationLevel);
+        }
+
 
         public void CommitTransaction()
         {
