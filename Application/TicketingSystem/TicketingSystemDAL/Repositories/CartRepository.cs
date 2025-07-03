@@ -15,7 +15,7 @@ namespace TicketingSystemDAL.Repositories
         public async Task<Cart> GetCartWithSeatsAsync(Guid id)
         {
             return await DbSet.Include(e => e.EventSeats)
-                              .Include("EventSeats.Price")
+                              .ThenInclude(es => es.Price)
                               .Include(e => e.Status)
                               .FirstOrDefaultAsync(e => e.Id == id);
         }
