@@ -17,8 +17,8 @@ namespace TicketingSystemBLL.Services.Interfaces
         /// Method to create cart.
         /// </summary>
         /// <param name="cartDto">Cart with all the details.</param>
-        /// <returns>Task after code execution.</returns>
-        Task CreateCartAsync(CartDto cartDto);
+        /// <returns>Cart Id.</returns>
+        Task<Guid> CreateCartAsync(CartDto cartDto);
 
         /// <summary>
         /// Adds seat to the cart.
@@ -26,6 +26,20 @@ namespace TicketingSystemBLL.Services.Interfaces
         /// <param name="eventSeatDto">Event seat that will be added to cart.</param>
         /// <returns>Cart with all details.</returns>
         Task<CartDto> AddSeatToCartAsync(EventSeatDto eventSeatDto);
+
+        /// <summary>
+        /// Pessimistic concurrency approach method implementation with the row lock on the update.
+        /// </summary>
+        /// <param name="eventSeatDto">Event seat that will be added to cart.</param>
+        /// <returns>Cart with all details.</returns>
+        Task<CartDto> AddSeatToCartWithPessimisticConcurrencyAsync(EventSeatDto eventSeatDto);
+
+        /// <summary>
+        /// Optimistic concurrency approach method implementation with the read committed.
+        /// </summary>
+        /// <param name="eventSeatDto">Event seat that will be added to cart.</param>
+        /// <returns>Cart with all details.</returns>
+        Task<CartDto> AddSeatToCartWithOptimisticConcurrencyAsync(EventSeatDto eventSeatDto);
 
         /// <summary>
         /// Removes the seat from the cart.

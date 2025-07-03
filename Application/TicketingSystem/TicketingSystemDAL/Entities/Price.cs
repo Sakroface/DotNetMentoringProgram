@@ -1,11 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
     public class Price : BaseGuidEntity
     {
-        public int EventSeatId { get; set; }
+        /// <summary>
+        /// Type of the seat the price was created for.
+        /// </summary>
+        public int SeatTypeId { get; set; }
 
         /// <summary>
         /// Price value in the currency.
@@ -17,10 +21,13 @@ namespace TicketingSystemDAL.Entities
         /// </summary>
         public bool IsActive { get; set; }
 
+
         #region Navigational properties for EF
 
-        [ForeignKey("EventSeatId")]
-        public EventSeat EventSeat { get; set; }
+        public virtual ICollection<EventSeat> EventSeats { get; set; }
+
+        [ForeignKey("SeatTypeId")]
+        public virtual SeatsType SeatsType { get; set; }
 
         #endregion
     }

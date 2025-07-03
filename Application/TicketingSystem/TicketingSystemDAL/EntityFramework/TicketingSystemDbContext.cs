@@ -104,6 +104,13 @@ namespace TicketingSystemDAL.EntityFramework
                 .HasForeignKey(es => es.StatusId)
                 .IsRequired();
 
+            modelBuilder.Entity<EventSeat>()
+                .HasOne(es => es.Cart)
+                .WithMany(c => c.EventSeats)
+                .HasForeignKey(vs => vs.CartId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
             modelBuilder.Entity<Cart>()
                 .Property(e => e.Id)
                 .ValueGeneratedOnAdd();
@@ -133,6 +140,7 @@ namespace TicketingSystemDAL.EntityFramework
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.TimeStamp).IsRequired();
+                entity.Property(e => e.Amount).HasPrecision(18, 2);
 
                 entity.HasOne(e => e.Status)
                     .WithMany(s => s.Payments)
@@ -149,6 +157,12 @@ namespace TicketingSystemDAL.EntityFramework
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Amount).HasPrecision(18, 2);
+
+                entity.HasOne(p => p.SeatsType)
+                    .WithMany(st => st.Prices)
+                    .HasForeignKey(p => p.SeatTypeId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
             });
 
 

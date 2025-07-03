@@ -8,7 +8,7 @@ namespace TicketingSystem.Models
         /// <summary>
         /// Id of the cart.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// Id of the related event.

@@ -49,7 +49,8 @@ namespace TicketingSystemBLL.Mapper
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
                     src.Status != null ? (Enums.CartStatus)src.Status.Id : default(Enums.CartStatus)));
             CreateMap<CartDto, Cart>()
-                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => (int)src.Status));
+                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => (int)src.Status))
+                .ForMember(dest => dest.Status, opt => opt.Ignore());
 
             CreateMap<Payment, PaymentDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
@@ -62,7 +63,7 @@ namespace TicketingSystemBLL.Mapper
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src =>
                     src.Status != null ? (Enums.EventSeatStatus)src.Status.Id : default(Enums.EventSeatStatus)))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => 
-                    src.Prices.FirstOrDefault(p => p.IsActive).Amount));
+                    src.Price.Amount));
             CreateMap<EventSeatDto, EventSeat>()
                 .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => (int)src.Status));
 

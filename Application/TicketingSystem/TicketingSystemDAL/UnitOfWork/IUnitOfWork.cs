@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 using TicketingSystemDAL.Entities;
 using TicketingSystemDAL.Repositories.Interfaces;
@@ -30,6 +31,9 @@ namespace TicketingSystemDAL.UnitOfWork
         void Save();
         Task SaveAsync();
         void BeginTransaction();
+        void BeginTransaction(IsolationLevel isolationLevel);
+        Task BeginTransactionAsync();
+        Task BeginTransactionAsync(IsolationLevel isolationLevel);
         void CommitTransaction();
         void RollbackTransaction();
     }
