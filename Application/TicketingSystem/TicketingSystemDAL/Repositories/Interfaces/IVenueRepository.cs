@@ -37,6 +37,13 @@ namespace TicketingSystemDAL.Repositories.Interfaces
         /// <param name="rowId">Identifier for the row.</param>
         /// <returns>Specific row with the seats that belong to it.</returns>
         Task<VenueRow> GetRowWithSeatsAsync(int rowId);
+
+        /// <summary>
+        /// Method to get venues by eventId.
+        /// </summary>
+        /// <param name="eventId">Id of the event that venues belong to.</param>
+        /// <returns>Enumeration with the venues.</returns>
+        Task<IEnumerable<Venue>> GetVenuesByEventAsync(int eventId);
     }
 
 }

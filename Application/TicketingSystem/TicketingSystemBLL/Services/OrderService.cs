@@ -18,13 +18,15 @@ namespace TicketingSystemBLL.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPaymentService _paymentService;
+        private readonly INotificationService _notificationService;
 
-        public OrderService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IPaymentService paymentService)
+        public OrderService(ILogger<EventService> logger, IMapper mapper, IUnitOfWork unitOfWork, IPaymentService paymentService, INotificationService notificationService)
         {
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _paymentService = paymentService;
+            _notificationService = notificationService;
         }
 
         public async Task<CartDto> AddSeatToCartAsync(EventSeatDto eventSeatDto)
@@ -136,6 +138,8 @@ namespace TicketingSystemBLL.Services
                     var updatedCart = await _unitOfWork.CartRepository.GetCartWithSeatsAsync(eventSeatDto.CartId);
                     var dto = _mapper.Map<CartDto>(updatedCart);
                     dto.Amount = dto.EventSeats.Sum(i => i.Price);
+
+                    await _notificationService.SendSeatBookingNotificationAsync(dto, eventSeatDto);
 
                     return dto;
                 }

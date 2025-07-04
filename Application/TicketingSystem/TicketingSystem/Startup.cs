@@ -56,6 +56,7 @@ namespace TicketingSystem
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IUtilityService, UtilityService>();
+            services.AddSingleton<IMessageQueueService, AzureServiceBusService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
