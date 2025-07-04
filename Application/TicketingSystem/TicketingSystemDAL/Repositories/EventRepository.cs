@@ -11,7 +11,9 @@ namespace TicketingSystemDAL.Repositories
 {
     public class EventRepository : Repository<Event>, IEventRepository
     {
-        public EventRepository(TicketingSystemDbContext context) : base(context) { }
+        public EventRepository(TicketingSystemDbContext context) : base(context) 
+        {
+        }
 
         public override async Task<Event> GetByIdAsync(object id)
         {

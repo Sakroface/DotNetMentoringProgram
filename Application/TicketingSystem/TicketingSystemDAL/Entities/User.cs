@@ -30,6 +30,8 @@ namespace TicketingSystemDAL.Entities
         /// </summary>
         public string Password { get; set; }
 
+        public string Email { get; set; }
+
         #region Navigation properties for EF
 
         public virtual ICollection<Order> Orders { get; set; }

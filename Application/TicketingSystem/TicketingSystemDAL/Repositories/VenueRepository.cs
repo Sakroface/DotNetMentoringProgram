@@ -13,12 +13,14 @@ namespace TicketingSystemDAL.Repositories
         private readonly DbSet<VenueSection> _sectionsDbSet;
         private readonly DbSet<VenueRow> _rowsDbSet;
         private readonly DbSet<VenueSeat> _seatsDbSet;
+        private readonly DbSet<EventVenue> _eventVenuesDbSet;
 
         public VenueRepository(TicketingSystemDbContext context) : base(context) 
         {
             _sectionsDbSet = context.Set<VenueSection>();
             _rowsDbSet = context.Set<VenueRow>();
             _seatsDbSet = context.Set<VenueSeat>();
+            _eventVenuesDbSet = context.Set<EventVenue>();
         }
 
         public override async Task<IEnumerable<Venue>> GetAllAsync()
@@ -63,6 +65,12 @@ namespace TicketingSystemDAL.Repositories
                 .ToListAsync();
 
             return allSeats.Where(s => !bookedSeatIds.Contains(s.Id));
+        }
+
+        public async Task<IEnumerable<Venue>> GetVenuesByEventAsync(int eventId)
+        {
+            var venueIds = await _eventVenuesDbSet.Where(ev => ev.EventId == eventId).Select(ev => ev.VenueId).ToListAsync();
+            return await DbSet.Where(v => venueIds.Contains(v.Id)).ToListAsync();
         }
     }
 
