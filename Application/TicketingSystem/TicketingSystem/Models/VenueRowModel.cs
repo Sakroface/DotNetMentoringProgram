@@ -1,6 +1,8 @@
-﻿namespace TicketingSystemBLL.Objects
+﻿using System.Collections.Generic;
+
+namespace TicketingSystem.Models
 {
-    public class VenueRow
+    public class VenueRowModel
     {
         /// <summary>
         /// Unique Identifier.
@@ -16,5 +18,10 @@
         /// Name of the row.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Venue seats.
+        /// </summary>
+        public IEnumerable<VenueSeatModel> VenueSeats { get; set; }
     }
 }

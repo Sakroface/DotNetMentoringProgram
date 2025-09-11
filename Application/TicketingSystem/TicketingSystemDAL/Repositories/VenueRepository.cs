@@ -10,13 +10,45 @@ namespace TicketingSystemDAL.Repositories
 {
     public class VenueRepository : Repository<Venue>, IVenueRepository
     {
-        public VenueRepository(TicketingSystemDbContext context) : base(context) { }
+        private readonly DbSet<VenueSection> _sectionsDbSet;
+        private readonly DbSet<VenueRow> _rowsDbSet;
+        private readonly DbSet<VenueSeat> _seatsDbSet;
+
+        public VenueRepository(TicketingSystemDbContext context) : base(context) 
+        {
+            _sectionsDbSet = context.Set<VenueSection>();
+            _rowsDbSet = context.Set<VenueRow>();
+            _seatsDbSet = context.Set<VenueSeat>();
+        }
+
+        public override async Task<IEnumerable<Venue>> GetAllAsync()
+        {
+            return await DbSet
+                    .Include(v => v.VenueSections)
+                    .Include(v => v.VenueType)
+                    .ToListAsync();
+
+        }
 
         public async Task<Venue> GetVenueWithSectionsAsync(int venueId)
         {
             return await DbSet
-                .Include(v => v.VenueSections.Select(s => s.VenueRows.Select(r => r.VenueSeats)))
+                .Include(v => v.VenueSections)
                 .FirstOrDefaultAsync(v => v.Id == venueId);
+        }
+
+        public async Task<VenueSection> GetSectionWithRowsAsync(int sectionId)
+        {
+            return await _sectionsDbSet
+                .Include(v => v.VenueRows)
+                .FirstOrDefaultAsync(v => v.Id == sectionId);
+        }
+
+        public async Task<VenueRow> GetRowWithSeatsAsync(int rowId)
+        {
+            return await _rowsDbSet
+                .Include(v => v.VenueSeats)
+                .FirstOrDefaultAsync(v => v.Id == rowId);
         }
 
         public async Task<IEnumerable<VenueSeat>> GetAvailableSeatsForEventAsync(int eventId, int venueId)

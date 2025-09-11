@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
-    public class SeatStatus : BaseEntity
+    public class SeatStatus : BaseDictionary
     {
         /// <summary>
         /// Constructor by default.
@@ -16,12 +12,6 @@ namespace TicketingSystemDAL.Entities
         {
             VenueSeats = new HashSet<VenueSeat>();
         }
-
-        /// <summary>
-        /// Nameof the seat type.
-        /// </summary>
-        [Required]
-        public string Name { get; set; }
 
         #region Navigational properties for EF
 

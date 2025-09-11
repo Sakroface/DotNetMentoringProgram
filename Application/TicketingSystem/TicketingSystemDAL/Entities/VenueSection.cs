@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {

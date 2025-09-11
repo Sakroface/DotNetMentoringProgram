@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using TicketingSystemDAL.Entities.Base;
 
 namespace TicketingSystemDAL.Entities
 {
-    public class EventStatus : BaseEntity
+    public class EventStatus : BaseDictionary
     {
         /// <summary>
         /// Contructor by default for EF.
@@ -12,13 +12,6 @@ namespace TicketingSystemDAL.Entities
         {
             Events = new HashSet<Event>();   
         }
-
-        /// <summary>
-        /// Name for the event status.
-        /// </summary>
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; }
 
         #region Navigation properties for EF.
 

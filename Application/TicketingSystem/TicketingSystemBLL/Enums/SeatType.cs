@@ -1,6 +1,6 @@
 ﻿namespace TicketingSystemBLL.Enums
 {
-    enum SeatType
+    public enum SeatType
     {
         Basic = 1, 
         VIP

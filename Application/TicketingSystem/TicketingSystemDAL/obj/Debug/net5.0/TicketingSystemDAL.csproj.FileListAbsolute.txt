@@ -11,3 +11,7 @@ C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\Ticketi
 C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.dll
 C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\ref\TicketingSystemDAL.dll
 C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.pdb
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\TicketingSystemDAL.runtimeconfig.json
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\bin\Debug\net5.0\TicketingSystemDAL.runtimeconfig.dev.json
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.genruntimeconfig.cache
+C:\Users\Ihor_Rubliuk\Desktop\.Net Mentoring\Application\TicketingSystem\TicketingSystemDAL\obj\Debug\net5.0\TicketingSystemDAL.csproj.AssemblyReference.cache

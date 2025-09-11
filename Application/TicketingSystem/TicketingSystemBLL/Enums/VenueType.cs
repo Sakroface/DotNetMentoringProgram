@@ -1,6 +1,6 @@
 ﻿namespace TicketingSystemBLL.Enums
 {
-    enum VenueType
+    public enum VenueType
     {
         StadiumWithSeats = 1, 
         StadiumWithStandOnlyPlaces

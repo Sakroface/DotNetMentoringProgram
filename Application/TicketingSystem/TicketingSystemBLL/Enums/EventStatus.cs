@@ -1,6 +1,6 @@
 ﻿namespace TicketingSystemBLL.Enums
 {
-    enum EventStatus
+    public enum EventStatus
     {
         Created = 1, 
         Approved,
